@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% block title %}Анкета{% endblock %}
+{% block content %}
+<header class="hero">
+  <p class="eyebrow">Опрос</p>
+  <h1>Короткая анкета</h1>
+  <p class="lead">Ответьте на вопросы. Время прохождения сохранится автоматически.</p>
+  <div class="meta">
+    <span>{{ questions|length }} вопросов</span>
+    <span id="timer">0:00</span>
+  </div>
+</header>
+
+<form class="card form" method="post" action="{{ url_for('submit') }}" id="survey-form">
+  {% for q in questions %}
+    <fieldset class="question" data-type="{{ q.qtype }}">
+      <legend>
+        <span class="num">{{ loop.index }}</span>
+        {{ q.prompt }}
+        {% if q.qtype == 'open' %}
+          <em>открытый ответ</em>
+        {% elif q.qtype == 'single' %}
+          <em>один вариант</em>
+        {% else %}
+          <em>несколько вариантов</em>
+        {% endif %}
+      </legend>
+
+      {% if q.qtype == 'open' %}
+        <input class="text-input" type="text" name="q-{{ q.id }}" maxlength="500" placeholder="Ваш ответ" autocomplete="off" required>
+      {% else %}
+        <div class="options">
+          {% for opt in q.options %}
+            <label class="option">
+              <input type="checkbox" name="q-{{ q.id }}" value="{{ opt }}" {% if q.qtype == 'single' %}data-single="1"{% endif %}>
+              <span>{{ opt }}</span>
+            </label>
+          {% endfor %}
+        </div>
+      {% endif %}
+    </fieldset>
+  {% endfor %}
+  <button class="btn primary wide" type="submit">Отправить</button>
+</form>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='survey.js') }}"></script>
+{% endblock %}

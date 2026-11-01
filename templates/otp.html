@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Код из SMS{% endblock %}
+{% block content %}
+<section class="card login">
+  <p class="eyebrow">Подтверждение</p>
+  <h1>Введите код</h1>
+  <p class="lead">Отправили код на {{ phone_label }}</p>
+  {% if preview_code %}
+    <p class="hint">SMS-шлюз ещё не задан в админке, поэтому код показан здесь: <strong>{{ preview_code }}</strong></p>
+  {% endif %}
+  <form method="post" action="{{ url_for('otp_post') }}" class="form">
+    <label>Код из SMS
+      <input class="text-input" type="text" name="code" inputmode="numeric" pattern="[0-9]*" maxlength="6" autocomplete="one-time-code" required>
+    </label>
+    <button class="btn primary wide" type="submit">Войти</button>
+  </form>
+  <form method="post" action="{{ url_for('phone_login_post') }}" class="form">
+    <input type="hidden" name="phone" value="{{ phone }}">
+    <button class="btn ghost wide" type="submit">Отправить код ещё раз</button>
+  </form>
+</section>
+{% endblock %}

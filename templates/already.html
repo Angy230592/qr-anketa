@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Анкета уже отправлена{% endblock %}
+{% block content %}
+<section class="card thanks">
+  <p class="eyebrow">Готово</p>
+  <h1>Вы уже проходили анкету</h1>
+  <p class="lead">Повторное прохождение с этого номера недоступно.</p>
+  {% if phone_label %}
+    <p class="hint">Номер: {{ phone_label }}</p>
+  {% endif %}
+</section>
+{% endblock %}

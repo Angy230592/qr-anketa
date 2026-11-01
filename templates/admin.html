@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+{% block title %}Админка{% endblock %}
+{% block body_class %}admin-body{% endblock %}
+{% block content %}
+<header class="admin-top">
+  <div>
+    <p class="eyebrow">Администратор</p>
+    <h1>Ответы и вопросы</h1>
+  </div>
+  <form method="post" action="{{ url_for('admin_logout') }}">
+    <button class="btn ghost" type="submit">Выйти</button>
+  </form>
+</header>
+
+<section class="grid-2">
+  <article class="card">
+    <h2>QR и адрес</h2>
+    <img class="qr small" src="{{ url_for('qr_png') }}" alt="QR">
+    <p class="link"><a href="{{ link }}">{{ link }}</a></p>
+    <p><a class="btn" href="{{ url_for('qr_page') }}">Открыть QR-страницу</a></p>
+    {% if not public %}
+      <p class="hint">Публичный туннель ещё не готов — телефон должен быть в той же сети.</p>
+    {% endif %}
+    <p class="hint">Адрес закреплён за постоянным именем туннеля и не должен меняться после перезапуска.</p>
+  </article>
+  <article class="card">
+    <h2>Сводка</h2>
+    <ul class="stats">
+      <li>Анкет: <strong>{{ stats.count }}</strong></li>
+      <li>Средний %: <strong>{{ stats.avg_score if stats.avg_score is not none else '—' }}</strong></li>
+      <li>Среднее время: <strong>{{ stats.avg_duration|duration }}</strong></li>
+    </ul>
+  </article>
+</section>
+
+<section class="card">
+  <h2>SMS для входа по телефону</h2>
+  <p class="hint">Ключ API с sms.ru. Пока поле пустое, код подтверждения показывается на экране телефона — для проверки. После сохранения ключа код уйдёт только в SMS.</p>
+  <form class="upload" method="post" action="{{ url_for('admin_settings') }}">
+    <label>API ID sms.ru
+      <input class="text-input" type="text" name="smsru_api_id" value="{{ smsru_api_id }}" autocomplete="off">
+    </label>
+    <button class="btn primary" type="submit">Сохранить</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>Вопросы</h2>
+  <p class="hint">Загрузите .txt или .xlsx. Текущие вопросы заменятся. Ответы в базе не удаляются.</p>
+  <form class="upload" method="post" action="{{ url_for('admin_upload') }}" enctype="multipart/form-data">
+    <input type="file" name="file" accept=".txt,.xlsx" required>
+    <button class="btn primary" type="submit">Загрузить вопросы</button>
+    <a class="btn" href="{{ url_for('download_template') }}">Шаблон Excel</a>
+    <a class="btn" href="{{ url_for('download_questions') }}">Скачать текущие</a>
+  </form>
+  <ol class="q-list">
+    {% for q in questions %}
+      <li>
+        <strong>{{ q.prompt }}</strong>
+        <span class="tag">{{ q.qtype }}</span>
+        {% if q.scored %}<span class="tag">оценка</span>{% endif %}
+        {% if q.options %}<div class="muted">{{ q.options|join(' · ') }}</div>{% endif %}
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="card">
+  <h2>Ответы</h2>
+  <form class="filters" method="get" action="{{ url_for('admin_home') }}">
+    <label>С <input type="date" name="from" value="{{ date_from }}"></label>
+    <label>По <input type="date" name="to" value="{{ date_to }}"></label>
+    <button class="btn" type="submit">Показать</button>
+  </form>
+  <div class="actions">
+    <form method="post" action="{{ url_for('admin_export') }}">
+      <input type="hidden" name="from" value="{{ date_from }}">
+      <input type="hidden" name="to" value="{{ date_to }}">
+      <button class="btn primary" type="submit">Выгрузить Excel</button>
+    </form>
+    <form method="post" action="{{ url_for('admin_clear') }}" onsubmit="return confirm('Удалить все ответы? Вопросы останутся.');">
+      <button class="btn danger" type="submit">Очистить данные</button>
+    </form>
+  </div>
+
+  {% if not submissions %}
+    <p class="hint">Пока нет сохранённых анкет за выбранный период.</p>
+  {% endif %}
+
+  {% for s in submissions %}
+    <details class="submission">
+      <summary>
+        <span>#{{ s.id }}</span>
+        <span>{{ s.phone or 'без номера' }}</span>
+        <span>{{ s.submitted_at.replace('T', ' ') }}</span>
+        <span>{{ s.duration_seconds|duration }}</span>
+        <span>{% if s.score_percent is not none %}{{ s.score_percent }}%{% else %}без оценки{% endif %}</span>
+      </summary>
+      <table>
+        <thead>
+          <tr><th>Вопрос</th><th>Ответ</th><th>Верно</th></tr>
+        </thead>
+        <tbody>
+          {% for a in s.answers %}
+            <tr>
+              <td>{{ a.prompt }}</td>
+              <td>{{ a.answer_text }}</td>
+              <td>
+                {% if a.is_correct is none %}—{% elif a.is_correct %}да{% else %}нет{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </details>
+  {% endfor %}
+</section>
+{% endblock %}

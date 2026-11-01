@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Вход администратора{% endblock %}
+{% block content %}
+<section class="card login">
+  <p class="eyebrow">Админка</p>
+  <h1>Вход</h1>
+  <form method="post" action="{{ url_for('admin_login_post') }}" class="form">
+    <label>Логин
+      <input class="text-input" name="username" value="admin" required>
+    </label>
+    <label>Пароль
+      <input class="text-input" type="password" name="password" required>
+    </label>
+    <button class="btn primary wide" type="submit">Войти</button>
+  </form>
+</section>
+{% endblock %}

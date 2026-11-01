@@ -1,0 +1,184 @@
+:root {
+  --bg: #f3efe6;
+  --ink: #1c241c;
+  --muted: #5c6758;
+  --card: #fffdf8;
+  --line: #d9d1c3;
+  --accent: #2f6b4f;
+  --accent-ink: #fff;
+  --danger: #9b3a32;
+  --ok: #2f6b4f;
+  --error: #9b3a32;
+  --shadow: 0 12px 40px rgba(28, 36, 28, 0.08);
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; padding: 0; }
+html { min-height: 100%; }
+body {
+  font-family: "Segoe UI", system-ui, sans-serif;
+  min-height: 100vh;
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(180deg, rgba(243, 239, 230, 0.82) 0%, rgba(243, 239, 230, 0.9) 100%),
+    url("hippocratic-cups.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: scroll;
+  color: var(--ink);
+  line-height: 1.45;
+}
+.page {
+  width: min(960px, calc(100% - 28px));
+  margin: 0 auto;
+  padding: 24px 0 64px;
+}
+h1, h2 { margin: 0 0 8px; letter-spacing: -0.03em; }
+h1 { font-size: clamp(1.6rem, 4vw, 2.2rem); }
+h2 { font-size: 1.15rem; }
+.eyebrow {
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  font-size: 0.72rem;
+  color: var(--accent);
+  margin: 0 0 6px;
+}
+.lead, .hint, .muted { color: var(--muted); }
+.hero { margin-bottom: 18px; }
+.meta {
+  display: flex;
+  gap: 12px;
+  color: var(--muted);
+  font-size: 0.92rem;
+}
+.card {
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 16px;
+}
+.form { display: grid; gap: 16px; }
+.question {
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px;
+  margin: 0;
+}
+.question legend {
+  font-weight: 650;
+  padding: 0 6px;
+}
+.question legend em {
+  font-style: normal;
+  font-weight: 500;
+  color: var(--muted);
+  font-size: 0.8rem;
+  margin-left: 8px;
+}
+.num {
+  display: inline-grid;
+  place-items: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  background: #e7f0e4;
+  color: var(--accent);
+  font-size: 0.85rem;
+  margin-right: 6px;
+}
+.options { display: grid; gap: 8px; margin-top: 10px; }
+.option {
+  display: flex;
+  gap: 10px;
+  align-items: flex-start;
+  padding: 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  min-height: 48px;
+}
+.option:has(input:checked) {
+  border-color: var(--accent);
+  background: #f3f8f4;
+}
+.text-input, input[type="date"], input[type="file"] {
+  width: 100%;
+  margin-top: 6px;
+  padding: 12px 12px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font: inherit;
+  background: #fff;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0 16px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  text-decoration: none;
+  font: inherit;
+  cursor: pointer;
+}
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn.danger { background: var(--danger); color: #fff; border-color: var(--danger); }
+.btn.ghost { background: transparent; }
+.btn.wide { width: 100%; }
+.qr { width: min(280px, 80vw); height: auto; display: block; margin: 12px auto; }
+.qr.small { width: 140px; }
+.link { word-break: break-all; text-align: center; }
+.qr-card, .thanks, .login { text-align: center; }
+.stats { list-style: none; padding: 0; }
+.stats li { margin: 8px 0; }
+.flash-wrap { display: grid; gap: 8px; margin-bottom: 12px; }
+.flash { padding: 10px 12px; border-radius: 10px; }
+.flash.error { background: #f8e6e4; color: var(--error); }
+.flash.ok { background: #e7f0e4; color: var(--ok); }
+.admin-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.grid-2 { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.upload, .filters, .actions { display: flex; flex-wrap: wrap; gap: 10px; align-items: end; margin: 12px 0; }
+.q-list { padding-left: 18px; }
+.q-list li { margin: 10px 0; }
+.tag {
+  display: inline-block;
+  font-size: 0.72rem;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 1px 8px;
+  color: var(--muted);
+  margin-left: 6px;
+}
+.submission { border-top: 1px solid var(--line); padding: 10px 0; }
+.submission summary {
+  display: grid;
+  grid-template-columns: 50px 1fr 1fr auto auto;
+  gap: 10px;
+  cursor: pointer;
+}
+table { width: 100%; border-collapse: collapse; margin-top: 10px; font-size: 0.92rem; }
+th, td { border-bottom: 1px solid var(--line); text-align: left; padding: 8px 6px; vertical-align: top; }
+
+@media (max-width: 799px) {
+  body {
+    background-image:
+      linear-gradient(180deg, rgba(243, 239, 230, 0.84) 0%, rgba(243, 239, 230, 0.92) 100%),
+      url("hippocratic-cups-sm.jpg");
+  }
+}
+
+@media (min-width: 800px) {
+  .grid-2 { grid-template-columns: 1fr 1fr; }
+  .page { padding-top: 36px; }
+}
