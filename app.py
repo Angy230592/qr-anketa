@@ -57,21 +57,27 @@ def lan_ip() -> str:
         return forced
     skip = ("127.", "169.254.", "172.19.", "192.168.204.", "192.168.244.")
     found: list[str] = []
-    try:
-        out = subprocess.check_output(["ipconfig"], text=True, encoding="oem", errors="replace")
-    except OSError:
-        out = ""
-    for line in out.splitlines():
-        if "IPv4" not in line:
-            continue
-        ip = line.split(":")[-1].strip()
-        if ip and not ip.startswith(skip):
-            found.append(ip)
-    for ip in found:
-        if ip.startswith("192.168."):
-            return ip
-    if found:
-        return found[0]
+    if os.name == "nt":
+        try:
+            out = subprocess.check_output(
+                ["ipconfig"],
+                text=True,
+                encoding="cp866",
+                errors="replace",
+            )
+        except (OSError, LookupError, subprocess.CalledProcessError):
+            out = ""
+        for line in out.splitlines():
+            if "IPv4" not in line:
+                continue
+            ip = line.split(":")[-1].strip()
+            if ip and not ip.startswith(skip):
+                found.append(ip)
+        for ip in found:
+            if ip.startswith("192.168."):
+                return ip
+        if found:
+            return found[0]
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     try:
         sock.connect(("8.8.8.8", 80))
@@ -519,7 +525,7 @@ if __name__ == "__main__":
     seed_if_empty()
     print(f"Локально:  http://127.0.0.1:{PORT}/")
     print(f"В сети:    http://{lan_ip()}:{PORT}/")
-    print(f"Админка:   http://127.0.0.1:{PORT}/admin  ({ADMIN_USER} / {ADMIN_PASSWORD})")
+    print(f"Админка:   http://127.0.0.1:{PORT}/admin  (логин {ADMIN_USER})")
     disable_tunnel = os.environ.get("DISABLE_TUNNEL", "").strip() in {"1", "true", "yes"}
     if disable_tunnel or os.environ.get("PUBLIC_URL", "").strip():
         print("Туннель отключён: используется адрес хостинга.")
